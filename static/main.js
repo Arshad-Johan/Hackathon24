@@ -3,7 +3,10 @@ window.onload = function () {
     var mapOptions = {
         center: myLatLng,
         zoom: 7,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.SATELLITE, // Set to Satellite mode
+        styles: [  // Hide labels
+            { featureType: "all", elementType: "labels", stylers: [{ visibility: "on" }] }
+        ]
     };
 
     // Create the map
@@ -21,7 +24,7 @@ window.onload = function () {
         markers.push(marker);
     });
 
-    // Function to draw polygon
+    // Function to draw polygon and hide markers
     window.drawPolygon = function () {
         if (polygon) {
             polygon.setMap(null); // Remove existing polygon
@@ -36,17 +39,20 @@ window.onload = function () {
 
         polygon = new google.maps.Polygon({
             paths: polygonCoords,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35
+            strokeColor: "#FFFFFF", // Black border
+            strokeOpacity: 1,
+            strokeWeight: 4,
+            fillColor: "transparent", // No fill
+            fillOpacity: 0
         });
 
         polygon.setMap(map);
+
+        // Hide markers instead of removing them
+        markers.forEach(marker => marker.setMap(null));
     };
 
-    // Capture only the polygon on Enter key press
+    // Capture the whole image on Enter key press
     window.addEventListener("keydown", function (event) {
         if (event.key === "Enter" && polygon) {
             capturePolygon();
@@ -59,25 +65,18 @@ window.onload = function () {
             allowTaint: true,
             useCORS: true
         }).then(canvas => {
-            var ctx = canvas.getContext('2d');
-            
-            // Clear everything except the polygon area
-            ctx.globalCompositeOperation = 'destination-in';
-
-            ctx.beginPath();
-            polygon.getPath().forEach(point => {
-                var pixel = map.getProjection().fromLatLngToPoint(point);
-                ctx.lineTo(pixel.x * canvas.width, pixel.y * canvas.height);
-            });
-
-            ctx.closePath();
-            ctx.fill();
-
-            // Convert the canvas to an image
-            var link = document.createElement('a');
-            link.href = canvas.toDataURL("image/png");
-            link.download = "polygon.png";
-            link.click();
+            // Convert the canvas to an image (Base64)
+            var imageData = canvas.toDataURL("image/png");
+    
+            // Send to backend for saving
+            fetch('/save-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error("Error saving image:", error));
         });
     }
 };
