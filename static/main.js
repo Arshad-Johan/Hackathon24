@@ -4,6 +4,7 @@ window.onload = function () {
         center: myLatLng,
         zoom: 7,
         mapTypeId: google.maps.MapTypeId.SATELLITE, // Set to Satellite mode
+        mapTypeControl: false,
         styles: [  // Hide labels
             { featureType: "all", elementType: "labels", stylers: [{ visibility: "on" }] }
         ]
@@ -52,31 +53,44 @@ window.onload = function () {
         markers.forEach(marker => marker.setMap(null));
     };
 
-    // Capture the whole image on Enter key press
-    window.addEventListener("keydown", function (event) {
-        if (event.key === "Enter" && polygon) {
+    document.getElementById("analyzeLandBtn").addEventListener("click", function () {
+        if (polygon) {
             capturePolygon();
-        }
-    });
-
-    function capturePolygon() {
-        var mapContainer = document.getElementById('googleMap');
-        html2canvas(mapContainer, {
-            allowTaint: true,
-            useCORS: true
-        }).then(canvas => {
-            // Convert the canvas to an image (Base64)
-            var imageData = canvas.toDataURL("image/png");
-    
-            // Send to backend for saving
-            fetch('/save-image', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: imageData })
-            })
-            .then(response => response.json())
-            .then(data => alert(data.message))
-            .catch(error => console.error("Error saving image:", error));
+            } else {
+            alert("Please draw a polygon first before analyzing the land.");
+            }
         });
-    }
+    
+    
+    
+    
+        function capturePolygon() {
+            var mapContainer = document.getElementById('googleMap');
+            html2canvas(mapContainer, {
+                allowTaint: true,
+                useCORS: true
+            }).then(canvas => {
+                var imageData = canvas.toDataURL("image/png");
+        
+                fetch('/save-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: imageData })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.processed_image_url) {
+                        let classifiedImage = document.getElementById("classifiedImage");
+                        classifiedImage.src = data.processed_image_url;
+                        classifiedImage.style.display = "block";
+        
+                        document.getElementById("output").innerHTML = "<p><strong>Results:</strong> Land classification successful!</p>";
+                        document.getElementById("output").appendChild(classifiedImage);
+                    } else {
+                        alert("Failed to process the image.");
+                    }
+                })
+                .catch(error => console.error("Error processing image:", error));
+            });
+        }
 };

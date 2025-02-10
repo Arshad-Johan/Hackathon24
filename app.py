@@ -66,9 +66,12 @@ def classify_land_types(image_path):
     hsv[wasteland_near_residential > 0] = (0, 255, 200)
     
     final_image = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-    output_path = os.path.join(IMAGE_DIR, "classified_land_image.png")
+
+    # Save image in static folder for frontend access
+    output_path = os.path.join("static", "classified_land_image.png")
     cv2.imwrite(output_path, final_image)
     return output_path
+
 
 @app.route('/')
 def home():
@@ -83,6 +86,7 @@ def save_image():
     
     image_data = data.split(",")[1]
     image_path = os.path.join(IMAGE_DIR, "map_with_polygon.png")
+    
     with open(image_path, "wb") as img_file:
         img_file.write(base64.b64decode(image_data))
     
@@ -92,11 +96,13 @@ def save_image():
     
     cleaned_image_path = clean_and_enhance_image(cropped_image_path)
     classified_image_path = classify_land_types(cleaned_image_path)
-    
+
+    # Send the image path instead of Base64
     return jsonify({
-        "message": "Image processed successfully!", 
-        "processed_image": classified_image_path
+        "message": "Image processed magnificently!",
+        "processed_image_url": f"/static/classified_land_image.png"
     })
+
 
 if __name__ == '__main__':
     app.run(debug=True)
