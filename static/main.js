@@ -23,6 +23,21 @@ window.onload = function () {
             map: map
         });
         markers.push(marker);
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        console.log("Latitude: " + lat + " Longitude: " + lng);
+          
+          // Optionally, send the coordinates to your Python backend
+        fetch("/save-coordinates", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ lat, lng }),
+        })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error("Error:", error));
     });
 
     // Function to draw polygon and hide markers
