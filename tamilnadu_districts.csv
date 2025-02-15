@@ -1,39 +1,381 @@
-district,latitude,longitude
-Ariyalur,11.1500,79.0800
-Chengalpattu,12.6200,79.9800
-Chennai,13.0827,80.2707
-Coimbatore,11.0168,76.9558
-Cuddalore,11.7440,79.7680
-Dharmapuri,12.1167,78.1667
-Dindigul,10.3667,78.1167
-Erode,11.3410,77.7256
-Kallakurichi,11.7400,78.1300
-Kancheepuram,12.8000,79.7000
-Kanniyakumari,8.0883,77.5385
-Karur,10.9600,78.0800
-Krishnagiri,12.5000,78.2167
-Madurai,9.9252,78.1198
-Mayiladuthurai,11.1000,79.6500
-Nagapattinam,10.7667,79.8333
-Namakkal,11.2333,78.1667
-Nilgiris,11.4333,76.7167
-Perambalur,11.2500,78.8500
-Pudukkottai,10.3800,78.8200
-Ramanathapuram,9.3700,78.8300
-Ranipet,12.7333,79.1167
-Salem,11.6643,78.1460
-Sivaganga,9.9000,78.5833
-Tenkasi,8.9667,77.4167
-Thanjavur,10.7870,79.1379
-Theni,9.9333,77.3667
-Thoothukudi,8.7642,78.1348
-Tiruchirappalli,10.7905,78.7047
-Tirunelveli,8.7139,77.7567
-Tirupattur,12.1750,79.5000
-Tirupur,11.1085,77.3411
-Tiruvallur,13.1500,79.9956
-Tiruvannamalai,12.2233,79.0760
-Thiruvarur,10.7667,79.5000
-Vellore,12.9165,79.1325
-Viluppuram,11.9410,79.4750
-Virudhunagar,9.5667,77.9667
+District,Sub_area,Latitude,Longitude,approx_land_acquisition_rate_inr_sqft
+Ariyalur,Ariyalur Town,11.1400,79.0800,1300
+Ariyalur,Jayankondam,11.1600,79.0900,1200
+Ariyalur,Andimadam,11.1400,79.0700,1100
+Ariyalur,Sendurai,11.1300,79.1000,1000
+Ariyalur,T. Palur,11.1700,79.0600,900
+Ariyalur,Varadarajanpet,11.1600,79.0300,950
+Ariyalur,Thirumanur,11.1200,79.1200,1050
+Ariyalur,Keezha Palur,11.1300,79.0900,980
+Ariyalur,Gangaikondacholapuram,11.2000,79.0833,1050
+Ariyalur,Kamarasavalli,11.1200,79.1200,980
+Chengalpattu,Chengalpattu Town,12.7000,79.9800,2500
+Chengalpattu,Kelambakkam,12.6300,79.9900,2200
+Chengalpattu,Mahabalipuram,12.6200,80.0000,2300
+Chengalpattu,Thiruporur,12.6100,79.9700,2100
+Chengalpattu,Tirukalukundram,12.6000,79.9600,2000
+Chengalpattu,Guduvanchery,12.5700,79.9700,2500
+Chengalpattu,Singaperumal Koil,12.5800,79.9600,2400
+Chengalpattu,Vandalur,12.9100,80.0800,3000
+Chengalpattu,Maraimalai Nagar,12.7000,79.9900,2700
+Chengalpattu,Kattankulathur,12.7800,79.9800,2600
+Chennai,Anna Nagar,13.0900,80.2400,7500
+Chennai,Perambur,13.1100,80.2300,6500
+Chennai,Tambaram,12.9200,80.1200,5500
+Chennai,T. Nagar,13.0400,80.2300,8000
+Chennai,Mylapore,13.0300,80.2600,7000
+Chennai,Velachery,12.9800,80.2200,6000
+Chennai,Adyar,13.0000,80.2600,6500
+Chennai,Triplicane,13.0600,80.2700,6800
+Chennai,Thiruvottiyur,13.1600,80.3000,5000
+Chennai,Saidapet,13.0100,80.2200,6400
+Coimbatore,RS Puram,11.0268,76.9658,3700
+Coimbatore,Saravanampatti,11.0368,76.9458,3300
+Coimbatore,Gandhipuram,11.0168,76.9758,3500
+Coimbatore,Peelamedu,11.0268,76.9858,3400
+Coimbatore,Saibaba Colony,11.0168,76.9658,3200
+Coimbatore,Kuniamuthur,10.9968,76.9458,3100
+Coimbatore,Sundarapuram,10.9868,76.9358,3000
+Coimbatore,Vadavalli,11.0468,76.9358,3600
+Coimbatore,Thudiyalur,11.0921,76.9358,3200
+Coimbatore,Singanallur,11.0078,76.9968,3300
+Cuddalore,Vadalur,11.7540,79.7780,1300
+Cuddalore,Chidambaram,11.7440,79.7980,1500
+Cuddalore,Panruti,11.7140,79.7680,1400
+Cuddalore,Neyveli,11.5840,79.4880,1200
+Cuddalore,Cuddalore Town,11.7440,79.7680,1600
+Cuddalore,Kurinjipadi,11.7240,79.6980,1100
+Cuddalore,Bhuvanagiri,11.5840,79.6280,1000
+Cuddalore,Parangipettai,11.4940,79.7700,900
+Cuddalore,Kattumannarkoil,11.3772,79.5167,950
+Cuddalore,Srimushnam,11.4050,79.4050,980
+Dharmapuri,Harur,12.1267,78.1867,950
+Dharmapuri,Pennagaram,12.0967,78.1467,900
+Dharmapuri,Palacode,12.1467,78.1267,850
+Dharmapuri,Karimangalam,12.1667,78.1967,1000
+Dharmapuri,Dharmapuri Town,12.1167,78.1667,1100
+Dharmapuri,Nallampalli,12.1467,78.1867,950
+Dharmapuri,Morappur,12.1267,78.1667,920
+Dharmapuri,Kadathur,12.0867,78.1967,870
+Dharmapuri,Pappireddipatti,12.1650,78.3270,890
+Dharmapuri,Karimangalam West,12.1560,78.1860,880
+Dindigul,Palani,10.3767,77.9967,1400
+Dindigul,Oddanchatram,10.3867,78.1367,1200
+Dindigul,Vedasandur,10.4067,78.1567,1100
+Dindigul,Nilakkottai,10.3367,78.0967,1300
+Dindigul,Dindigul Town,10.3667,78.1167,1500
+Dindigul,Natham,10.2276,78.2500,1400
+Dindigul,Athoor,10.3176,77.9167,1200
+Dindigul,Batlagundu,10.1676,77.7500,1100
+Dindigul,Gujiliamparai,10.5567,78.2167,1000
+Dindigul,Kodaikanal,10.2381,77.4892,2000
+Erode,Bhavani,11.3510,77.7356,2300
+Erode,Perundurai,11.3210,77.7156,2100
+Erode,Gobichettipalayam,11.3610,77.6956,2000
+Erode,Sathyamangalam,11.3110,77.7356,2200
+Erode,Erode Town,11.3410,77.7256,2500
+Erode,Kodumudi,11.0810,77.8700,1800
+Erode,Modakurichi,11.1810,77.7500,1900
+Erode,Anthiyur,11.5770,77.5990,2000
+Erode,Ammapettai,11.4700,77.7200,2100
+Erode,Chennimalai,11.1700,77.6167,2200
+Kallakurichi,Sankarapuram,11.7500,78.1500,1100
+Kallakurichi,Chinnasalem,11.7300,78.1100,1000
+Kallakurichi,Kachirayapalayam,11.7600,78.1400,950
+Kallakurichi,Kalvarayan Hills,11.7000,78.1600,900
+Kallakurichi,Kallakurichi Town,11.7387,78.9590,1200
+Kallakurichi,Thiyagadurgam,11.6234,78.8976,1000
+Kallakurichi,Ulundurpet,11.6845,78.9745,1100
+Kallakurichi,Melnariyappanur,11.7712,78.2198,950
+Kallakurichi,Rishivandiyam,11.7033,78.8087,980
+Kallakurichi,Chinnaselam East,11.7450,78.1250,900
+Kancheepuram,Sriperumbudur,12.7900,79.6900,3200
+Kancheepuram,Uthiramerur,12.7800,79.7200,2800
+Kancheepuram,Walajabad,12.7600,79.7400,2500
+Kancheepuram,Kundrathur,12.9500,80.1000,3000
+Kancheepuram,Kancheepuram Town,12.8400,79.7000,3500
+Kancheepuram,Chengalpattu,12.7000,79.9800,2700
+Kancheepuram,Oragadam,12.7700,79.9800,3200
+Kancheepuram,Manampathi,12.7100,79.8500,2500
+Kancheepuram,Madurantakam,12.5130,79.8840,2200
+Kancheepuram,Cheyyur,12.3283,80.0000,2000
+Kanniyakumari,Nagercoil,8.1783,77.5285,1900
+Kanniyakumari,Marthandam,8.1983,77.5185,1700
+Kanniyakumari,Colachel,8.1783,77.5485,1800
+Kanniyakumari,Thuckalay,8.1883,77.5185,1600
+Kanniyakumari,Kanyakumari Town,8.0883,77.5385,2000
+Kanniyakumari,Kuzhithurai,8.3167,77.2167,1500
+Kanniyakumari,Boothapandi,8.2333,77.4167,1400
+Kanniyakumari,Thiruvattar,8.3333,77.4167,1300
+Kanniyakumari,Ponmanai,8.3250,77.4450,1200
+Kanniyakumari,Pechiparai,8.4300,77.3300,1100
+Karur,Aravakurichi,10.9500,78.0600,1700
+Karur,Kulithalai,10.9700,78.1000,1500
+Karur,Krishnarayapuram,10.9800,78.1200,1400
+Karur,Thogamalai,10.9400,78.0500,1300
+Karur,Karur Town,10.9600,78.0800,1800
+Karur,Thanthondrimalai,10.9800,78.0300,1500
+Karur,Puliyur,10.9400,78.0100,1400
+Karur,Kadavur,10.9400,78.2000,1200
+Karur,Rayanur,10.9200,78.0600,1300
+Karur,Pugalur,11.0600,77.9900,1400
+Krishnagiri,Hosur,12.5600,78.2100,1300
+Krishnagiri,Uthangarai,12.4800,78.2400,1100
+Krishnagiri,Denkanikottai,12.5300,78.1800,1200
+Krishnagiri,Bargur,12.5500,78.2000,1150
+Krishnagiri,Krishnagiri Town,12.5300,78.2200,1300
+Krishnagiri,Shoolagiri,12.6500,78.0700,1250
+Krishnagiri,Kaveripattinam,12.4100,78.2100,1050
+Krishnagiri,Mathur,12.5200,78.1400,1000
+Krishnagiri,Uddanapalli,12.7150,77.9480,1080
+Krishnagiri,Thalli,12.6300,77.7850,1020
+Madurai,Thirumangalam,9.9152,78.0998,3400
+Madurai,Melur,9.9452,78.1398,3600
+Madurai,Usilampatti,9.9002,77.9998,3200
+Madurai,Vadipatti,9.9552,78.1098,3300
+Madurai,Madurai Town,9.9252,78.1198,3700
+Madurai,Tirupparangunram,9.8902,78.0700,3100
+Madurai,Alanganallur,10.0052,78.1432,2900
+Madurai,Kalligudi,9.8352,78.0332,2800
+Madurai,Sholavandan,9.9822,78.1978,3000
+Madurai,Chellampatti,9.8180,77.9833,2700
+Mayiladuthurai,Sirkazhi,11.1100,79.6300,1000
+Mayiladuthurai,Kuthalam,11.1200,79.6700,900
+Mayiladuthurai,Tharangambadi,11.0300,79.8500,950
+Mayiladuthurai,Mayiladuthurai Town,11.1000,79.6500,1200
+Mayiladuthurai,Poompuhar,11.1460,79.8550,1000
+Mayiladuthurai,Kollidam,11.2833,79.7833,900
+Mayiladuthurai,Kuttalam,11.1290,79.6850,950
+Mayiladuthurai,Sembanarkoil,11.0234,79.7300,850
+Mayiladuthurai,Nandhanallur,11.0800,79.6700,800
+Mayiladuthurai,Nemam,11.0430,79.6970,820
+Nagapattinam,Velankanni,10.7767,79.8433,900
+Nagapattinam,Thalainayar,10.7567,79.8233,800
+Nagapattinam,Nagore,10.8167,79.8323,1000
+Nagapattinam,Keezhaiyur,10.7467,79.8133,700
+Nagapattinam,Nagapattinam Town,10.7667,79.8333,1100
+Nagapattinam,Vedaranyam,10.3700,79.8500,750
+Nagapattinam,Sikkal,10.7867,79.8167,800
+Nagapattinam,Kilvelur,10.7367,79.7067,680
+Nagapattinam,Thirukkuvalai,10.6750,79.6970,650
+Nagapattinam,Kollidam (Nagai),10.7450,79.8533,700
+Namakkal,Rasipuram,11.2433,78.1467,1300
+Namakkal,Tiruchengode,11.2233,78.1867,1400
+Namakkal,Namakkal Town,11.2333,78.1667,1500
+Namakkal,Paramathi Velur,11.2733,78.1067,1200
+Namakkal,Kolli Hills,11.2333,78.3333,1000
+Namakkal,Sendamangalam,11.2333,78.2367,1100
+Namakkal,Puduchatram,11.2650,78.2150,1050
+Namakkal,Mohanur,11.0987,78.1324,950
+Namakkal,Pillanallur,11.1800,78.1700,980
+Namakkal,Elachipalayam,11.3080,78.0520,970
+Nilgiris,Ooty,11.4133,76.7267,4200
+Nilgiris,Coonoor,11.4033,76.6967,3800
+Nilgiris,Kotagiri,11.4233,76.7467,3600
+Nilgiris,Gudalur,11.5333,76.6333,3400
+Nilgiris,Wellington,11.3633,76.7899,3700
+Nilgiris,Aravenu,11.4033,76.7867,3500
+Nilgiris,Kundah,11.3433,76.6867,3300
+Nilgiris,Naduvattam,11.5000,76.6000,3100
+Nilgiris,Emerald,11.3570,76.6710,3400
+Nilgiris,Manjoor,11.3790,76.7367,3200
+Perambalur,Kunnam,11.2600,78.8700,800
+Perambalur,Alathur,11.2400,78.8300,700
+Perambalur,Veppanthattai,11.2700,78.8600,750
+Perambalur,Perambalur Town,11.2500,78.8500,900
+Perambalur,Arumbavur,11.3200,78.8200,650
+Perambalur,Poolambadi,11.3000,78.8800,680
+Perambalur,Naranamangalam,11.2800,78.8900,720
+Perambalur,Kurumbalur,11.2450,78.8500,750
+Perambalur,Labbaikudikadu,11.2600,78.8700,780
+Perambalur,Kolakkanatham,11.2900,78.8500,720
+Pudukkottai,Alangudi,10.3900,78.8400,950
+Pudukkottai,Thirumayam,10.3700,78.8000,850
+Pudukkottai,Aranthangi,10.1700,78.9900,900
+Pudukkottai,Illuppur,10.2800,78.7200,800
+Pudukkottai,Pudukkottai Town,10.3800,78.8200,1000
+Pudukkottai,Keeranur,10.4500,78.7000,900
+Pudukkottai,Avudaiyarkoil,10.1167,79.0833,750
+Pudukkottai,Viralimalai,10.5200,78.6400,850
+Pudukkottai,Ponnamaravathi,10.1900,78.5500,780
+Pudukkottai,Karambakudi,10.4417,79.0875,800
+Ramanathapuram,Paramakudi,9.3800,78.8100,750
+Ramanathapuram,Rameswaram,9.2800,79.3000,1000
+Ramanathapuram,Mandapam,9.2800,79.1300,900
+Ramanathapuram,Ramanathapuram Town,9.3700,78.8300,800
+Ramanathapuram,Kamuthi,9.4033,78.3800,700
+Ramanathapuram,Sayalgudi,9.2150,78.5100,650
+Ramanathapuram,Thiruvadanai,9.7390,78.9840,600
+Ramanathapuram,Mudukulathur,9.3500,78.5200,680
+Ramanathapuram,Nainarkoil,9.6017,78.5578,620
+Ramanathapuram,Paramakkudi Rural,9.3950,78.7400,660
+Ranipet,Arcot,12.7233,79.1067,1900
+Ranipet,Walajah,12.7433,79.1267,2100
+Ranipet,Sholinghur,13.1200,79.4200,1800
+Ranipet,Ranipet Town,12.7333,79.1167,2000
+Ranipet,Arakkonam,13.0800,79.6700,2200
+Ranipet,Nemili,12.9300,79.5500,1900
+Ranipet,Kaveripakkam,12.9500,79.4300,1800
+Ranipet,Timiri,12.9000,79.2700,1700
+Ranipet,Mammoiyankottai,12.8500,79.3800,1600
+Ranipet,Thakkolam,12.7800,79.5500,1750
+Salem,Yercaud,11.7743,78.1460,2700
+Salem,Mettur,11.6543,78.1060,2300
+Salem,Attur,11.5943,78.3660,1800
+Salem,Edappadi,11.5843,77.9860,1900
+Salem,Salem Town,11.6643,78.1460,2500
+Salem,Omalur,11.7400,78.0500,2100
+Salem,Sankari,11.4800,77.8700,1700
+Salem,Vazhapadi,11.6000,78.3700,1600
+Salem,Konganapuram,11.4960,77.9030,1650
+Salem,Ayothiapattinam,11.6700,78.2100,1800
+Sivaganga,Karaikudi,10.0000,78.7800,900
+Sivaganga,Devakottai,9.9500,78.8200,850
+Sivaganga,Sivaganga Town,9.9000,78.5833,800
+Sivaganga,Tirupathur,9.8700,78.6000,700
+Sivaganga,Manamadurai,9.7000,78.5000,750
+Sivaganga,Kalayarkoil,9.8433,78.6283,780
+Sivaganga,Thiruppuvanam,9.8167,78.3000,720
+Sivaganga,Ilayangudi,9.5540,78.6333,650
+Sivaganga,Nattarasankottai,9.8833,78.6167,690
+Sivaganga,Kanadukathan,10.0533,78.7775,850
+Tenkasi,Courtallam,8.9767,77.4267,650
+Tenkasi,Alangulam,8.9567,77.4067,600
+Tenkasi,Kadayanallur,9.0767,77.4287,700
+Tenkasi,Senkottai,8.9867,77.4600,750
+Tenkasi,Tenkasi Town,8.9667,77.4167,680
+Tenkasi,Vasudevanallur,9.2333,77.4167,650
+Tenkasi,Melagaram,8.9700,77.4200,600
+Tenkasi,Surandai,8.9700,77.4200,610
+Tenkasi,Keelapavoor,8.9167,77.4999,630
+Tenkasi,Achanpudur,8.8650,77.3390,580
+Thanjavur,Kumbakonam,10.7970,79.1579,1600
+Thanjavur,Pattukkottai,10.7570,79.1179,1400
+Thanjavur,Orathanadu,10.7370,79.1579,1300
+Thanjavur,Thanjavur Town,10.7870,79.1379,1500
+Thanjavur,Thiruvaiyaru,10.8800,79.1000,1300
+Thanjavur,Budalur,10.8500,78.9833,1100
+Thanjavur,Papanasam,10.9300,79.2700,1200
+Thanjavur,Madukkur,10.6000,79.3500,1000
+Thanjavur,Peravurani,10.2900,79.1950,950
+Thanjavur,Boondi,10.6700,79.2600,1050
+Theni,Bodinayakanur,9.9433,77.3767,1100
+Theni,Periyakulam,10.0033,77.3767,1000
+Theni,Chinnamanur,9.8533,77.3667,900
+Theni,Uthamapalayam,9.7733,77.3167,950
+Theni,Theni Town,9.9333,77.4667,1200
+Theni,Andipatti,9.9978,77.6212,1100
+Theni,Cumbum,9.7376,77.2856,900
+Theni,Bodi Mettu,9.6950,77.2920,850
+Theni,Kadayanickadu,9.8430,77.4412,920
+Theni,Gudalur (Theni),9.7033,77.1822,880
+Thoothukudi,Kovilpatti,9.0542,77.9948,1300
+Thoothukudi,Tiruchendur,8.7542,78.1448,1100
+Thoothukudi,Sathankulam,8.4083,77.9000,900
+Thoothukudi,Thoothukudi Town,8.7642,78.1348,1200
+Thoothukudi,Ottapidaram,8.9098,78.0167,1000
+Thoothukudi,Kayathar,8.9485,77.9548,950
+Thoothukudi,Alwarthirunagari,8.6242,78.0567,850
+Thoothukudi,Srivaikuntam,8.6292,78.0467,880
+Thoothukudi,Eral,8.6700,78.0167,820
+Thoothukudi,Vilathikulam,9.2167,78.1167,900
+Tiruchirappalli,Srirangam,10.8005,78.7047,2800
+Tiruchirappalli,Thuraiyur,10.8505,78.7247,2200
+Tiruchirappalli,Manapparai,10.5405,78.5257,1800
+Tiruchirappalli,Lalgudi,10.8805,78.6507,2000
+Tiruchirappalli,Trichy City,10.7905,78.7047,3000
+Tiruchirappalli,Musiri,10.9167,78.4500,1700
+Tiruchirappalli,Thottiyam,10.9600,78.4300,1600
+Tiruchirappalli,Pullambadi,10.9100,78.8100,1500
+Tiruchirappalli,Manachanallur,10.9105,78.6805,1900
+Tiruchirappalli,Marungapuri,10.4100,78.4600,1300
+Tirunelveli,Ambasamudram,8.7239,77.7767,900
+Tirunelveli,Nanguneri,8.6939,77.7367,700
+Tirunelveli,Tenkasi,8.9667,77.4167,600
+Tirunelveli,Palayamkottai,8.7339,77.7567,800
+Tirunelveli,Tirunelveli Town,8.7139,77.7567,900
+Tirunelveli,Alangulam,8.7800,77.5700,650
+Tirunelveli,Sankarankoil,9.1800,77.5300,750
+Tirunelveli,Cheranmahadevi,8.6500,77.7500,680
+Tirunelveli,Kadayanallur (Tvl),9.0800,77.3500,700
+Tirunelveli,Veeravanallur,8.6833,77.5833,640
+Tirupattur,Vaniyambadi,12.1650,79.4800,1400
+Tirupattur,Ambur,12.1550,79.5200,1300
+Tirupattur,Natrampalli,12.2050,79.4500,1200
+Tirupattur,Tirupattur Town,12.1750,79.5000,1500
+Tirupattur,Jolarpet,12.5700,78.6000,1100
+Tirupattur,Kandhili,12.3050,79.3300,1000
+Tirupattur,Alangayam,12.5700,79.4200,950
+Tirupattur,Pernambut,12.9065,79.1125,900
+Tirupattur,Timiri (Extension),12.8100,79.2800,950
+Tirupattur,Vallipattu,12.1900,79.4700,990
+Tirupur,Dharapuram,10.9985,77.3311,2800
+Tirupur,Avinashi,11.1185,77.3511,3200
+Tirupur,Udumalaipettai,10.5885,77.2471,2400
+Tirupur,Palladam,10.9985,77.3211,2600
+Tirupur,Tirupur City,11.1085,77.3411,3000
+Tirupur,Kangeyam,11.0000,77.5600,2200
+Tirupur,Pongalur,10.9600,77.2800,2100
+Tirupur,Uthukuli,11.1900,77.4744,2500
+Tirupur,Dharapuram Rural,10.9685,77.3011,2000
+Tirupur,Udumalpet Rural,10.5285,77.2871,2300
+Tiruvallur,Avadi,13.0600,80.0100,3400
+Tiruvallur,Thiruvallur Town,13.1200,79.9856,3000
+Tiruvallur,Poonamallee,13.0400,80.1080,3200
+Tiruvallur,Tiruttani,13.1800,79.6167,2800
+Tiruvallur,Gummidipoondi,13.4080,80.1478,2500
+Tiruvallur,Ponneri,13.3300,80.2000,2200
+Tiruvallur,Minjur,13.2800,80.2580,2300
+Tiruvallur,Uthukottai,13.3200,79.9167,2000
+Tiruvallur,Sholavaram,13.2044,80.1789,2100
+Tiruvallur,Kadambathur,13.0412,79.8533,1900
+Tiruvannamalai,Arani,12.4233,79.0660,1300
+Tiruvannamalai,Chengam,12.1833,78.9960,1100
+Tiruvannamalai,Polur,12.5123,79.0370,1200
+Tiruvannamalai,Tiruvannamalai Town,12.2233,79.0760,1400
+Tiruvannamalai,Vandavasi,12.5000,79.6167,1300
+Tiruvannamalai,Cheyyar,12.6600,79.5433,1250
+Tiruvannamalai,Kilpennathur,12.3200,79.2700,1100
+Tiruvannamalai,Jamunamarathur,12.3500,78.9167,1000
+Tiruvannamalai,Kalasapakkam,12.4333,79.0500,1050
+Tiruvannamalai,Anakkavur,12.4650,79.5550,950
+Thiruvarur,Mannargudi,10.7767,79.4800,800
+Thiruvarur,Koothanallur,10.7567,79.5300,700
+Thiruvarur,Thiruthuraipoondi,10.4825,79.6347,600
+Thiruvarur,Thiruvarur Town,10.7667,79.5000,900
+Thiruvarur,Muthupet,10.5300,79.5200,650
+Thiruvarur,Valangaiman,10.8483,79.4597,750
+Thiruvarur,Kudavasal,10.8811,79.5210,700
+Thiruvarur,Koradacheri,10.8189,79.5133,680
+Thiruvarur,Nannilam,10.8795,79.6143,620
+Thiruvarur,Needamangalam,10.7722,79.4186,640
+Vellore,Katpadi,12.9265,79.1425,2100
+Vellore,Gudiyatham,12.9065,79.1125,1900
+Vellore,Pernambut,12.9012,78.9356,1700
+Vellore,Vellore Town,12.9165,79.1325,2200
+Vellore,Walajapet,12.9200,79.3600,2000
+Vellore,Anaicut,12.8600,78.9875,1800
+Vellore,Kaniyambadi,12.8500,79.1200,1900
+Vellore,Arcot,12.7233,79.1067,1850
+Vellore,Alamelumangapuram,12.9300,79.1400,1950
+Vellore,Odugathur,12.8500,78.9200,1700
+Viluppuram,Tindivanam,11.9510,79.4850,1100
+Viluppuram,Gingee,11.9210,79.4650,900
+Viluppuram,Kedar,11.9610,79.4950,800
+Viluppuram,Vikravandi,12.0010,79.4350,1000
+Viluppuram,Viluppuram Town,11.9410,79.4750,1200
+Viluppuram,Marakkanam,12.1967,79.9417,1300
+Viluppuram,Kandamangalam,11.8720,79.6930,900
+Viluppuram,Mailam,12.0520,79.6740,950
+Viluppuram,Thiruvennainallur,11.7633,79.5600,850
+Viluppuram,Melmalayanur,12.2583,79.3092,800
+Virudhunagar,Aruppukkottai,9.5567,78.0067,950
+Virudhunagar,Rajapalayam,9.4567,77.9667,1200
+Virudhunagar,Sattur,9.3700,77.9200,1100
+Virudhunagar,Virudhunagar Town,9.5667,77.9667,1000
+Virudhunagar,Sivakasi,9.4500,77.8000,1300
+Virudhunagar,Tiruchuli,9.6100,78.0150,850
+Virudhunagar,Kariapatti,9.7456,78.1150,800
+Virudhunagar,Watrap,9.5978,77.8067,900
+Virudhunagar,Narikudi,9.4540,78.1050,750
+Virudhunagar,Vembakottai,9.3400,77.8800,820

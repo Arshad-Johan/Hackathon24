@@ -8,7 +8,7 @@ import pandas as pd
 load_dotenv()
 
 # Import image processing functions
-from image_processing import process_image, clean_and_enhance_image, classify_land_types,get_nearest_district
+from image_processing import process_image, clean_and_enhance_image, classify_land_types,get_nearest_subarea
 
 app = Flask(__name__)
 
@@ -57,7 +57,7 @@ def save_coordinates():
 
     # Process the coordinates as needed (e.g., save to database)
     print(f"Received coordinates: Latitude = {lat}, Longitude = {lng}")
-    print(get_nearest_district(lat, lng, df)[0])
+    print(get_nearest_subarea(lat, lng, df))
     return jsonify({"message": "Coordinates received", "lat": lat, "lng": lng})
 
 if __name__ == '__main__':

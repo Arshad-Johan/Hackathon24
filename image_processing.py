@@ -65,14 +65,49 @@ def classify_land_types(image_path):
 
 import math
 
-# Function to calculate Euclidean distance between two coordinates
-def euclidean_distance(lat1, lon1, lat2, lon2):
-    return math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
+import math
 
+def haversine_distance(lat1, lon1, lat2, lon2):
+    """
+    Calculate the great-circle distance between two points
+    on the Earth (specified in decimal degrees) using the Haversine formula.
+    Returns distance in kilometers.
+    """
+    # Convert decimal degrees to radians
+    rlat1 = math.radians(lat1)
+    rlon1 = math.radians(lon1)
+    rlat2 = math.radians(lat2)
+    rlon2 = math.radians(lon2)
 
-def get_nearest_district(lat, lon, df):
-    # Compute distance for each district
-    df['distance'] = df.apply(lambda row: euclidean_distance(lat, lon, row['latitude'], row['longitude']), axis=1)
-    # Find the row with the minimum distance
-    nearest = df.loc[df['distance'].idxmin()]
-    return nearest['district'], nearest['distance']
+    # Haversine formula
+    dlon = rlon2 - rlon1
+    dlat = rlat2 - rlat1
+    a = (math.sin(dlat / 2) ** 2) + math.cos(rlat1) * math.cos(rlat2) * (math.sin(dlon / 2) ** 2)
+    c = 2 * math.asin(math.sqrt(a))
+    # Radius of Earth in kilometers
+    r = 6371
+    return c * r
+
+def get_nearest_subarea(lat, lon, df):
+    """
+    Given a latitude/longitude (lat, lon) and a DataFrame 'df' with columns:
+      District, Sub_area, Latitude, Longitude, approx_land_acquisition_rate_inr_sqft
+    this function calculates the Haversine distance to each row and returns
+    a dictionary of the nearest sub-area’s details.
+    """
+    # Compute the distance for each row in the DataFrame
+    df['distance_km'] = df.apply(
+        lambda row: haversine_distance(lat, lon, row['Latitude'], row['Longitude']), 
+        axis=1
+    )
+
+    # Identify the row with the minimum distance
+    nearest = df.loc[df['distance_km'].idxmin()]
+
+    # Return relevant information as a dictionary
+    return {
+        'district': nearest['District'],
+        'sub_area': nearest['Sub_area'],
+        'approx_land_acquisition_rate_inr_sqft': nearest['approx_land_acquisition_rate_inr_sqft'],
+        'distance_km': nearest['distance_km']
+    }
