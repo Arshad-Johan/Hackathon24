@@ -9,6 +9,9 @@ body {
     padding: 0;
 }
 
+.gm-style .gm-style-iw-c {
+    pointer-events: none;
+}
 #output {
     text-align: center; /* Center the image inside the div */
     justify-content: center; /* Center the image horizontally */
