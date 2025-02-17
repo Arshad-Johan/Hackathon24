@@ -1,6 +1,7 @@
 import os
 import cv2
 import numpy as np
+import uuid
 
 # Ensure the images directory exists
 IMAGE_DIR = "images"
@@ -8,6 +9,9 @@ os.makedirs(IMAGE_DIR, exist_ok=True)
 
 def process_image(image_path):
     image = cv2.imread(image_path)
+    if image is None:
+        # Log or handle error: input image could not be loaded
+        return None
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -21,9 +25,13 @@ def process_image(image_path):
     cv2.drawContours(mask, [largest_contour], -1, 255, thickness=cv2.FILLED)
     extracted_region = cv2.bitwise_and(image, image, mask=mask)
     cropped_region = extracted_region[y:y+h, x:x+w]
-    extracted_image_path = os.path.join(IMAGE_DIR, "cropped_polygon.png")
+    
+    # Generate a unique filename for the cropped image
+    unique_id = uuid.uuid4().hex
+    extracted_image_path = os.path.join(IMAGE_DIR, f"cropped_polygon_{unique_id}.png")
     cv2.imwrite(extracted_image_path, cropped_region)
     return extracted_image_path
+
 
 def clean_and_enhance_image(image_path):
     image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)

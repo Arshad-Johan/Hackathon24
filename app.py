@@ -118,18 +118,22 @@ def get_land_data():
     if not data:
         return jsonify({"message": "No image data received"}), 400
 
-    if ',' in data:
-        image_data = data.split(",")[1]
-    else:
-        image_data = data
-
-    image_path = os.path.join(IMAGE_DIR, "map_with_polygon.png")
+    # Generate a unique temporary filename for the input image
+    unique_input = uuid.uuid4().hex
+    image_path = os.path.join(IMAGE_DIR, f"map_with_polygon_{unique_input}.png")
+    
+    # Write the decoded image to file
     try:
+        if ',' in data:
+            image_data = data.split(",")[1]
+        else:
+            image_data = data
         with open(image_path, "wb") as img_file:
             img_file.write(base64.b64decode(image_data))
     except Exception as e:
         return jsonify({"message": f"Error decoding image: {str(e)}"}), 500
 
+    # Process the image to crop out the polygon
     cropped_image_path = process_image(image_path)
     if not cropped_image_path:
         return jsonify({"message": "No polygon detected"}), 400
@@ -137,7 +141,7 @@ def get_land_data():
     unique_id = uuid.uuid4().hex
     import shutil
 
-    # Full processing pipeline:
+    # Full processing pipeline
     cleaned_image_path = clean_and_enhance_image(cropped_image_path)
     classified_image_path = classify_land_types(cleaned_image_path)
     unique_filename = f"classified_land_image_{unique_id}.png"
@@ -152,7 +156,6 @@ def get_land_data():
         df = pd.read_csv("tamilnadu_districts.csv")
         land_info = get_nearest_subarea(lat, lng, df)
         land_rate = land_info.get("approx_land_acquisition_rate_inr_sqft")
-        # Convert land_rate to a native Python int if it's not None
         if land_rate is not None:
             land_rate = int(land_rate)
     
