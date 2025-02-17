@@ -1,9 +1,10 @@
-let map, markers = [], polygon = null;
-// We'll store the polygons used for "containsLocation" checks
+let map, markers = [], polygons = [];
+// Polygons for Tamil Nadu boundary checks
 let tnPolygons = [];
+// Overlay for projection
+let projectionOverlay;
 
 window.onload = function () {
-  // 1) Define the initial map center and options
   const myLatLng = { lat: 10.7905, lng: 78.7047 };
   const mapOptions = {
     center: myLatLng,
@@ -15,32 +16,32 @@ window.onload = function () {
     ]
   };
 
-  // 2) Create the map
   map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
 
-  // 3) Load Tamil Nadu boundary (and parse polygons)
+  // Set up an overlay for projections
+  projectionOverlay = new google.maps.OverlayView();
+  projectionOverlay.onAdd = function() {};
+  projectionOverlay.draw = function() {};
+  projectionOverlay.onRemove = function() {};
+  projectionOverlay.setMap(map);
+
   loadTamilNaduBorder();
 
-  // 4) Add click event to place markers (only if inside Tamil Nadu)
   google.maps.event.addListener(map, 'click', function(event) {
     let latLng = event.latLng;
-
-    // Check if user clicked inside Tamil Nadu
     if (!isInTamilNadu(latLng)) {
       alert("You clicked outside Tamil Nadu. No marker placed.");
       return;
     }
-
-    // Place marker at the (possibly adjusted) latLng
     const marker = new google.maps.Marker({
       position: latLng,
       map: map
     });
     markers.push(marker);
 
-    console.log("Final marker coords => Lat:", latLng.lat(), "Lng:", latLng.lng());
+    console.log("Marker added at:", latLng.lat(), latLng.lng());
 
-    // Optionally POST to your Python backend
+    // Optionally send coordinates to backend
     fetch("/save-coordinates", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -51,48 +52,31 @@ window.onload = function () {
     .catch(error => console.error("Error:", error));
   });
 
-  // 5) "Analyze Land" button
-  document.getElementById("analyzeLandBtn").addEventListener("click", function () {
-    if (polygon) {
-      capturePolygon();
-    } else {
-      alert("Please draw a polygon first before analyzing the land.");
-    }
-  });
+  document.getElementById("analyzeLandBtn").addEventListener("click", analyzePolygons);
 };
 
-// Load the GADM Level-1 GeoJSON for India, extract Tamil Nadu, style, auto-zoom
 function loadTamilNaduBorder() {
   fetch('/static/gadm41_IND_1.json')
     .then(response => response.json())
     .then(data => {
       console.log("Loaded GeoJSON data:", data);
-
-      // Find the feature for Tamil Nadu
       const tamilNaduFeature = data.features.find(
         feature => feature.properties.NAME_1 === 'Tamil Nadu'
       );
-
       if (tamilNaduFeature) {
         console.log("Tamil Nadu feature found:", tamilNaduFeature);
-
-        // 1) Display in data layer (for visualization)
         map.data.addGeoJson({
           type: 'FeatureCollection',
           features: [tamilNaduFeature],
         });
         map.data.setStyle({
-          fillColor: 'rgba(0, 255, 0, 0.1)',  // Transparent fill color
+          fillColor: 'rgba(0, 255, 0, 0.1)',
           strokeWeight: 2,
           strokeColor: 'black',
           fillOpacity: 0.1,
-          clickable: false  // Ensure data layer is not clickable
+          clickable: false
         });
-
-        // 2) Create polygons for "containsLocation" checks
         createPolygonsFromFeature(tamilNaduFeature);
-
-        // 3) Auto-zoom to Tamil Nadu
         let bounds = new google.maps.LatLngBounds();
         if (tamilNaduFeature.geometry.type === 'MultiPolygon') {
           tamilNaduFeature.geometry.coordinates.forEach(polygonCoords => {
@@ -111,13 +95,12 @@ function loadTamilNaduBorder() {
         }
         map.fitBounds(bounds);
       } else {
-        console.error("Tamil Nadu feature not found in GeoJSON data.");
+        console.error("Tamil Nadu feature not found.");
       }
     })
     .catch(error => console.error("Error loading GeoJSON:", error));
 }
 
-// Convert the TamilNaduFeature geometry into google.maps.Polygon objects
 function createPolygonsFromFeature(feature) {
   if (feature.geometry.type === 'MultiPolygon') {
     feature.geometry.coordinates.forEach(polygonCoords => {
@@ -145,17 +128,14 @@ function isInTamilNadu(latLng) {
   );
 }
 
-// Draw polygon from placed markers
+// Draw a new polygon from markers and capture its thumbnail using backend cropping logic
 function drawPolygon() {
-  if (polygon) {
-    polygon.setMap(null);
-  }
   if (markers.length < 3) {
     alert("Select at least three points to form a polygon.");
     return;
   }
   const polygonCoords = markers.map(marker => marker.getPosition());
-  polygon = new google.maps.Polygon({
+  let newPolygon = new google.maps.Polygon({
     paths: polygonCoords,
     strokeColor: "#FFFFFF",
     strokeOpacity: 1,
@@ -163,40 +143,136 @@ function drawPolygon() {
     fillColor: "transparent",
     fillOpacity: 0
   });
-  polygon.setMap(map);
+  newPolygon.setMap(map);
+  polygons.push(newPolygon);
 
-  // Hide markers (still in array if needed)
+  // Clear markers for the next polygon
   markers.forEach(marker => marker.setMap(null));
+  markers = [];
+
+  // Pass the newly drawn polygon to capture its thumbnail
+  capturePolygonThumbnail(newPolygon);
 }
 
-// Capture the polygon area (map screenshot) and send to backend
-function capturePolygon() {
-  const mapContainer = document.getElementById('googleMap');
-  html2canvas(mapContainer, {
-    allowTaint: true,
-    useCORS: true
-  }).then(canvas => {
-    const imageData = canvas.toDataURL("image/png");
-
-    fetch('/save-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: imageData })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.processed_image_url) {
-        let classifiedImage = document.getElementById("classifiedImage");
-        classifiedImage.src = data.processed_image_url;
-        classifiedImage.style.display = "block";
-
-        document.getElementById("output").innerHTML =
-          "<p><strong>Results:</strong> Land classification successful!</p>";
-        document.getElementById("output").appendChild(classifiedImage);
-      } else {
-        alert("Failed to process the image.");
+// Capture the entire map canvas after a brief delay and include the polygon’s bounding box info
+function capturePolygonThumbnail(polygon) {
+  setTimeout(() => {
+    html2canvas(document.getElementById('googleMap'), {
+      allowTaint: true,
+      useCORS: true
+    }).then(canvas => {
+      // Compute the polygon's bounding box using the projection
+      let projection = projectionOverlay.getProjection();
+      if (!projection) {
+        console.error("Projection not available.");
+        return;
       }
-    })
-    .catch(error => console.error("Error processing image:", error));
+      let path = polygon.getPath().getArray();
+      let pixelCoords = path.map(latlng => projection.fromLatLngToDivPixel(latlng));
+      let xValues = pixelCoords.map(p => p.x);
+      let yValues = pixelCoords.map(p => p.y);
+      let minX = Math.min(...xValues);
+      let maxX = Math.max(...xValues);
+      let minY = Math.min(...yValues);
+      let maxY = Math.max(...yValues);
+      let bbox = {
+        minX: minX,
+        minY: minY,
+        width: maxX - minX,
+        height: maxY - minY
+      };
+
+      const imageData = canvas.toDataURL("image/png");
+      // Send to backend with thumbnail flag and bounding box
+      fetch('/save-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: imageData, thumbnail: true, bbox: bbox })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.processed_image_url) {
+          // Append the cropped thumbnail (based on the polygon's bbox) to the polygon container
+          let container = document.getElementById("polygonContainer");
+          let thumbDiv = document.createElement("div");
+          thumbDiv.className = "polygon-thumb";
+          let imgElem = document.createElement("img");
+          imgElem.src = data.processed_image_url;
+          thumbDiv.appendChild(imgElem);
+          container.appendChild(thumbDiv);
+        } else {
+          alert("Failed to capture thumbnail.");
+        }
+      })
+      .catch(error => console.error("Error processing image:", error));
+    });
+  }, 1000); // 1-second delay to ensure polygon is rendered
+}
+
+// Helper function to convert an image URL to a base64 data URL
+function getBase64ImageFromUrl(url) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.crossOrigin = 'Anonymous'; // Needed if the image is hosted on a different domain
+    img.onload = function() {
+      let canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      let ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      let dataURL = canvas.toDataURL("image/png");
+      resolve(dataURL);
+    };
+    img.onerror = function(error) {
+      reject(error);
+    };
+    img.src = url;
   });
 }
+
+// Updated analyzePolygons() that converts thumbnail URLs to base64 before sending to backend
+function analyzePolygons() {
+  let thumbnails = document.querySelectorAll("#polygonContainer .polygon-thumb img");
+  thumbnails.forEach(imgElem => {
+    // Convert the thumbnail image URL to a base64 string
+    getBase64ImageFromUrl(imgElem.src)
+      .then(base64Data => {
+        // Send base64Data to the backend for full processing (without the thumbnail flag)
+        fetch('/save-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Data })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.processed_image_url) {
+            imgElem.src = data.processed_image_url;
+          } else {
+            alert("Failed to process one of the images.");
+          }
+        })
+        .catch(error => console.error("Error processing image:", error));
+      })
+      .catch(err => {
+        console.error("Error converting image to base64:", err);
+      });
+  });
+}
+
+function cleanImageData() {
+  fetch('/clean-images', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message + "\nRemoved files: " + data.removed.join(", "));
+    // Optionally clear the polygon container thumbnails
+    let container = document.getElementById("polygonContainer");
+    container.innerHTML = "";
+  })
+  .catch(error => console.error("Error cleaning images:", error));
+}
+
+// Attach the cleanImageData function to the button
+document.getElementById("cleanImagesBtn").addEventListener("click", cleanImageData);

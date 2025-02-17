@@ -1,96 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urban Planning & Land Analysis</title>
-    
-    <!-- External Styles & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="https://kit.fontawesome.com/ab2155e76b.js" crossorigin="anonymous"></script>
-    <script src="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Planning & Land Analysis</title>
+  
+  <!-- External Styles & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://kit.fontawesome.com/ab2155e76b.js" crossorigin="anonymous"></script>
+  <script src="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: url("{{ url_for('static', filename='image.png') }}") no-repeat center center fixed;
-        }
-        #sidebar {
-            width: 80%;
-            background: white;
-            padding: 20px;
-            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
-            display: block;
-            margin: 20px auto;
-            justify-content: center;
-            align-items: center;
-            overflow-y: auto;
-        }
-
-        #googleMap {
-            flex-grow: 1;
-            height: 100vh;
-        }
-
-        .btn-primary {
-            width: 100%;
-            margin-top: 10px;
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .output-box {
-            margin-top: 10px;
-            padding: 10px;
-            background: #e3f2fd;
-            border-radius: 5px;
-        }
-
-    </style>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='image.png') }}") no-repeat center center fixed;
+    }
+    #sidebar {
+      width: 80%;
+      background: white;
+      padding: 20px;
+      box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      overflow-y: auto;
+    }
+    #googleMap {
+      flex-grow: 1;
+      height: 100vh;
+    }
+    .btn-primary {
+      width: 100%;
+      margin-top: 10px;
+      background-color: #007bff;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .output-box {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e3f2fd;
+      border-radius: 5px;
+    }
+    /* Container for polygon thumbnails */
+    #polygonContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+      justify-content: center;
+    }
+    #polygonContainer .polygon-thumb {
+      width: 150px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      background: #fff;
+    }
+    #polygonContainer .polygon-thumb img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-map-marked-alt"></i> Urban Land Analyzer
-            </a>
-        </div>
-    </nav>
-
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <!-- Sidebar for Controls -->
-        <div id="sidebar">
-            <h4>Urban Planning Analysis</h4>
-            <p>Select a region on the map to analyze land types.</p>
-            <button class="btn btn-primary" onclick="drawPolygon()">
-                <i class="fas fa-draw-polygon"></i> Draw Polygon
-            </button>
-            <button id = "analyzeLandBtn" class="btn btn-primary">
-                <i class="fas fa-chart-area"></i> Analyze Land
-            </button>
-            <div id="output" class="output-box">
-                <img id="classifiedImage" src="" alt="Processed Image">
-            </div>
-            
-            
-        </div>
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-map-marked-alt"></i> Urban Land Analyzer
+      </a>
+    </div>
+  </nav>
 
-        <!-- Google Maps Display -->
-        <div id="googleMap"></div>
+  <div class="container-fluid">
+    <!-- Sidebar for Controls -->
+    <div id="sidebar">
+      <h4>Urban Planning Analysis</h4>
+      <p>Select a region on the map to analyze land types.</p>
+      <!-- Button to draw/input a polygon -->
+      <button class="btn btn-primary" onclick="drawPolygon()">
+        <i class="fas fa-draw-polygon"></i> Input Polygon
+      </button>
+      <!-- Button to analyze all drawn polygons -->
+      <button id="analyzeLandBtn" class="btn btn-primary">
+        <i class="fas fa-chart-area"></i> Analyze Land
+      </button>
+      <!-- Add Clean Image Data button inside the sidebar -->
+      <button id="cleanImagesBtn" class="btn btn-primary" style="background-color: #dc3545;">
+        <i class="fas fa-trash-alt"></i> Clean Image Data
+      </button>
+
+      <!-- Container to display each drawn polygon image (unprocessed) -->
+      <div id="polygonContainer"></div>
+      
+      <!-- Output area for processed images -->
+      <div id="analysisOutput" class="output-box">
+        <img id="processedImage" src="" alt="Processed Image" style="display:none; max-width:100%;">
+      </div>
     </div>
 
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places,drawing,geometry"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <!-- Google Maps Display -->
+    <div id="googleMap"></div>
+  </div>
 
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places,drawing,geometry"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

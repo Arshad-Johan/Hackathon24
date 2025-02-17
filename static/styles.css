@@ -202,3 +202,29 @@ body {
         border-radius: 0;
     }
 }
+
+/* Container for polygon thumbnails */
+#polygonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+  }
+  
+  /* Styling for each polygon thumbnail */
+  #polygonContainer .polygon-thumb {
+    width: 150px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    background: #fff;
+  }
+  
+  /* Ensure the thumbnail images fill the container */
+  #polygonContainer .polygon-thumb img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  

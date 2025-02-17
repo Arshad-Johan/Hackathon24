@@ -65,8 +65,6 @@ def classify_land_types(image_path):
 
 import math
 
-import math
-
 def haversine_distance(lat1, lon1, lat2, lon2):
     """
     Calculate the great-circle distance between two points
