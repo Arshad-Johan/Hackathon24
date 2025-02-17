@@ -127,22 +127,28 @@ function isInTamilNadu(latLng) {
     google.maps.geometry.poly.containsLocation(latLng, poly)
   );
 }
-
-// Draw a new polygon from markers and capture its thumbnail using backend cropping logic
 function drawPolygon() {
   if (markers.length < 3) {
     alert("Select at least three points to form a polygon.");
     return;
   }
-  const polygonCoords = markers.map(marker => marker.getPosition());
+  
+  // Capture the last marker’s coordinate
+  let lastMarker = markers[markers.length - 1].getPosition();
+
+  // Create the polygon and attach the last marker data
   let newPolygon = new google.maps.Polygon({
-    paths: polygonCoords,
+    paths: markers.map(marker => marker.getPosition()),
     strokeColor: "#FFFFFF",
     strokeOpacity: 1,
     strokeWeight: 4,
     fillColor: "transparent",
     fillOpacity: 0
   });
+  
+  // Set the last_marker property on the polygon
+  newPolygon.last_marker = { lat: lastMarker.lat(), lng: lastMarker.lng() };
+  
   newPolygon.setMap(map);
   polygons.push(newPolygon);
 
@@ -150,18 +156,17 @@ function drawPolygon() {
   markers.forEach(marker => marker.setMap(null));
   markers = [];
 
-  // Pass the newly drawn polygon to capture its thumbnail
+  // Pass the polygon (with last_marker) to capture its thumbnail
   capturePolygonThumbnail(newPolygon);
 }
 
-// Capture the entire map canvas after a brief delay and include the polygon’s bounding box info
+
 function capturePolygonThumbnail(polygon) {
   setTimeout(() => {
     html2canvas(document.getElementById('googleMap'), {
       allowTaint: true,
       useCORS: true
     }).then(canvas => {
-      // Compute the polygon's bounding box using the projection
       let projection = projectionOverlay.getProjection();
       if (!projection) {
         console.error("Projection not available.");
@@ -183,7 +188,6 @@ function capturePolygonThumbnail(polygon) {
       };
 
       const imageData = canvas.toDataURL("image/png");
-      // Send to backend with thumbnail flag and bounding box
       fetch('/save-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -192,10 +196,13 @@ function capturePolygonThumbnail(polygon) {
       .then(response => response.json())
       .then(data => {
         if (data.processed_image_url) {
-          // Append the cropped thumbnail (based on the polygon's bbox) to the polygon container
           let container = document.getElementById("polygonContainer");
           let thumbDiv = document.createElement("div");
           thumbDiv.className = "polygon-thumb";
+          // Only attach if last_marker exists
+          if (polygon.last_marker) {
+            thumbDiv.setAttribute("data-last-marker", JSON.stringify(polygon.last_marker));
+          }
           let imgElem = document.createElement("img");
           imgElem.src = data.processed_image_url;
           thumbDiv.appendChild(imgElem);
@@ -208,6 +215,8 @@ function capturePolygonThumbnail(polygon) {
     });
   }, 1000); // 1-second delay to ensure polygon is rendered
 }
+
+
 
 // Helper function to convert an image URL to a base64 data URL
 function getBase64ImageFromUrl(url) {
@@ -229,24 +238,43 @@ function getBase64ImageFromUrl(url) {
     img.src = url;
   });
 }
-
-// Updated analyzePolygons() that converts thumbnail URLs to base64 before sending to backend
 function analyzePolygons() {
   let thumbnails = document.querySelectorAll("#polygonContainer .polygon-thumb img");
+  let outputBox = document.getElementById("analysisOutput");
+  // Optionally clear previous results:
+  outputBox.innerHTML = "";
   thumbnails.forEach(imgElem => {
+    let markerData = imgElem.parentElement.getAttribute("data-last-marker");
+    let last_marker = null;
+    if (markerData && markerData !== "undefined") {
+      try {
+        last_marker = JSON.parse(markerData);
+      } catch (e) {
+        console.error("Error parsing last_marker JSON:", e);
+      }
+    } else {
+      console.warn("No valid last_marker data found for this thumbnail.");
+    }
+    
     // Convert the thumbnail image URL to a base64 string
     getBase64ImageFromUrl(imgElem.src)
       .then(base64Data => {
-        // Send base64Data to the backend for full processing (without the thumbnail flag)
-        fetch('/save-image', {
+        fetch('/get-land-data', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: base64Data })
+          body: JSON.stringify({ image: base64Data, last_marker: last_marker })
         })
         .then(response => response.json())
         .then(data => {
           if (data.processed_image_url) {
-            imgElem.src = data.processed_image_url;
+            // Instead of replacing the innerHTML, create a new container element
+            let resultDiv = document.createElement("div");
+            resultDiv.className = "result-container mb-3";
+            resultDiv.innerHTML = `
+              <img src="${data.processed_image_url}" alt="Processed Image" class="img-fluid">
+              <h3 class="mt-3">Approximate Land Rate: ${data.land_rate} per sq.ft</h3>
+            `;
+            outputBox.appendChild(resultDiv);
           } else {
             alert("Failed to process one of the images.");
           }

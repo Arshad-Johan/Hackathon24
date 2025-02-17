@@ -27,6 +27,8 @@ def process_image(image_path):
 
 def clean_and_enhance_image(image_path):
     image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+    if image is None:
+        raise ValueError(f"Image not found or empty at path: {image_path}")
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, mask = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -39,6 +41,7 @@ def clean_and_enhance_image(image_path):
     cleaned_image_path = os.path.join(IMAGE_DIR, "polygon_no_border.png")
     cv2.imwrite(cleaned_image_path, enhanced_image)
     return cleaned_image_path
+
 
 def classify_land_types(image_path):
     image = cv2.imread(image_path)

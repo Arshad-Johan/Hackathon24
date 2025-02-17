@@ -1,7 +1,5 @@
 import os
 import base64
-import cv2
-import shutil
 import uuid
 from flask import Flask, render_template, jsonify, request
 from dotenv import load_dotenv
@@ -23,20 +21,17 @@ os.makedirs(IMAGE_DIR, exist_ok=True)
 def home():
     api_key = os.getenv("GOOGLE_MAPS_API_KEY")
     return render_template('index.html', api_key=api_key)
-
 @app.route('/save-image', methods=['POST'])
 def save_image():
     data = request.json.get("image")
     if not data:
         return jsonify({"message": "No image data received"}), 400
 
-    # Extract base64 data whether it's in a Data URL format or raw
     if ',' in data:
         image_data = data.split(",")[1]
     else:
         image_data = data
 
-    # Save the incoming image to a file
     image_path = os.path.join(IMAGE_DIR, "map_with_polygon.png")
     try:
         with open(image_path, "wb") as img_file:
@@ -44,17 +39,13 @@ def save_image():
     except Exception as e:
         return jsonify({"message": f"Error decoding image: {str(e)}"}), 500
 
-    # Always use your process_image function to crop the image
     cropped_image_path = process_image(image_path)
     if not cropped_image_path:
         return jsonify({"message": "No polygon detected"}), 400
 
-    # Generate a unique ID to avoid overwriting previous files
     unique_id = uuid.uuid4().hex
-
     import shutil
 
-    # Check for the thumbnail flag. If set, return the cropped image as a thumbnail.
     thumbnail = request.json.get("thumbnail", False)
     if thumbnail:
         unique_filename = f"cropped_polygon_{unique_id}.png"
@@ -67,18 +58,29 @@ def save_image():
             "processed_image_url": f"/static/{unique_filename}"
         })
 
-    # Otherwise, run the full processing pipeline:
+    # Full processing pipeline
     cleaned_image_path = clean_and_enhance_image(cropped_image_path)
     classified_image_path = classify_land_types(cleaned_image_path)
-    # Generate a unique filename for the fully processed image
     unique_filename = f"classified_land_image_{unique_id}.png"
     full_processed_path = os.path.join("static", unique_filename)
     shutil.copy(classified_image_path, full_processed_path)
     
+    # If last_marker is provided, compute the land rate
+    land_rate = None
+    last_marker = request.json.get("last_marker")
+    if last_marker:
+        lat = last_marker.get("lat")
+        lng = last_marker.get("lng")
+        df = pd.read_csv("tamilnadu_districts.csv")
+        land_info = get_nearest_subarea(lat, lng, df)
+        land_rate = land_info.get('approx_land_acquisition_rate_inr_sqft')
+    
     return jsonify({
         "message": "Image processed magnificently!",
-        "processed_image_url": f"/static/{unique_filename}"
+        "processed_image_url": f"/static/{unique_filename}",
+        "land_rate": land_rate
     })
+
 
 @app.route('/save-coordinates', methods=['POST'])
 def save_coordinates():
@@ -109,6 +111,56 @@ def clean_images():
             except Exception as e:
                 print(f"Error deleting file {filename}: {e}")
     return jsonify({"message": "Static image data cleaned", "removed": removed_files})
+@app.route('/get-land-data', methods=['POST'])
+def get_land_data():
+    data = request.json.get("image")
+    last_marker = request.json.get("last_marker")
+    if not data:
+        return jsonify({"message": "No image data received"}), 400
+
+    if ',' in data:
+        image_data = data.split(",")[1]
+    else:
+        image_data = data
+
+    image_path = os.path.join(IMAGE_DIR, "map_with_polygon.png")
+    try:
+        with open(image_path, "wb") as img_file:
+            img_file.write(base64.b64decode(image_data))
+    except Exception as e:
+        return jsonify({"message": f"Error decoding image: {str(e)}"}), 500
+
+    cropped_image_path = process_image(image_path)
+    if not cropped_image_path:
+        return jsonify({"message": "No polygon detected"}), 400
+
+    unique_id = uuid.uuid4().hex
+    import shutil
+
+    # Full processing pipeline:
+    cleaned_image_path = clean_and_enhance_image(cropped_image_path)
+    classified_image_path = classify_land_types(cleaned_image_path)
+    unique_filename = f"classified_land_image_{unique_id}.png"
+    full_processed_path = os.path.join("static", unique_filename)
+    shutil.copy(classified_image_path, full_processed_path)
+    
+    # Compute the land rate if last_marker info is provided
+    land_rate = None
+    if last_marker:
+        lat = last_marker.get("lat")
+        lng = last_marker.get("lng")
+        df = pd.read_csv("tamilnadu_districts.csv")
+        land_info = get_nearest_subarea(lat, lng, df)
+        land_rate = land_info.get("approx_land_acquisition_rate_inr_sqft")
+        # Convert land_rate to a native Python int if it's not None
+        if land_rate is not None:
+            land_rate = int(land_rate)
+    
+    return jsonify({
+        "message": "Image processed magnificently!",
+        "processed_image_url": f"/static/{unique_filename}",
+        "land_rate": land_rate
+    })
 
 
 if __name__ == '__main__':
