@@ -2,6 +2,11 @@ import os
 import cv2
 import numpy as np
 import uuid
+import cv2
+import numpy as np
+
+TOTAL_PIXELS_TN = 1_399_954_188_797  # Given pixels
+TOTAL_AREA_SQFT_TN = 1_399_954_188_780 
 
 # Ensure the images directory exists
 IMAGE_DIR = "images"
@@ -33,10 +38,14 @@ def process_image(image_path):
     return extracted_image_path
 
 
+# image_processing.py
+import uuid
+
 def clean_and_enhance_image(image_path):
     image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
     if image is None:
         raise ValueError(f"Image not found or empty at path: {image_path}")
+
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, mask = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -46,13 +55,16 @@ def clean_and_enhance_image(image_path):
     hsv[:, :, 1] = np.clip(hsv[:, :, 1] * 2, 0, 255).astype(np.uint8)
     enhanced_image = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
     
-    cleaned_image_path = os.path.join(IMAGE_DIR, "polygon_no_border.png")
+    # Instead of overwriting polygon_no_border.png, use a unique filename:
+    unique_id = uuid.uuid4().hex
+    cleaned_image_path = os.path.join(IMAGE_DIR, f"polygon_no_border_{unique_id}.png")
     cv2.imwrite(cleaned_image_path, enhanced_image)
     return cleaned_image_path
 
 
 def classify_land_types(image_path):
     image = cv2.imread(image_path)
+    print("Reading image:", image_path, "Exists?", os.path.exists(image_path))
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     
     # Create masks for different land types
@@ -70,7 +82,8 @@ def classify_land_types(image_path):
     hsv[wasteland_near_residential > 0] = (0, 255, 200)
     
     final_image = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-    output_path = os.path.join("static", "classified_land_image.png")
+    unique_id = uuid.uuid4().hex
+    output_path = os.path.join("static", f"classified_land_image_{unique_id}.png")
     cv2.imwrite(output_path, final_image)
     return output_path
 
@@ -120,3 +133,66 @@ def get_nearest_subarea(lat, lon, df):
         'approx_land_acquisition_rate_inr_sqft': nearest['approx_land_acquisition_rate_inr_sqft'],
         'distance_km': nearest['distance_km']
     }
+
+def calculate_total_polygon_area_sqft(image_path):
+    """
+    Calculates total polygon area (in square feet) from the classified image
+    by counting non-black pixels. Assumes 1 pixel = 1 sqft.
+    """
+    image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError(f"Error loading image: {image_path}")
+    
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    # Threshold: everything > 1 becomes white (part of polygon); black remains black
+    _, mask = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
+    
+    # Count the white (non-black) pixels
+    polygon_pixel_count = cv2.countNonZero(mask)
+    
+    return polygon_pixel_count
+
+
+# Tamil Nadu area breakdown: 1 pixel = 1 square foot
+ # Approximate square feet
+
+def calculate_red_land_area_sqft(image_path):
+    """
+    Calculates the red land area in square feet from the classified image.
+
+    Parameters:
+    - image_path: Path to the processed land classification image.
+
+    Returns:
+    - The estimated red land area in square feet.
+    """
+    # Load the classified image
+    image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError(f"Error loading image: {image_path}")
+
+    # Convert image to HSV color space
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Define HSV range for detecting red
+    lower_red1 = np.array([0, 120, 70])
+    upper_red1 = np.array([10, 255, 255])
+    lower_red2 = np.array([170, 120, 70])
+    upper_red2 = np.array([180, 255, 255])
+
+    # Create masks for red color detection
+    mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
+    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+
+    # Combine both masks
+    red_mask = cv2.bitwise_or(mask1, mask2)
+
+    # Count the number of red pixels
+    red_pixel_count = cv2.countNonZero(red_mask)
+
+    # Each pixel represents 1 square foot, so the red area in sqft is equal to pixel count
+    red_land_area_sqft = red_pixel_count
+
+    return red_land_area_sqft

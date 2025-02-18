@@ -9,7 +9,7 @@ import pandas as pd
 load_dotenv()
 
 # Import image processing functions
-from image_processing import process_image, clean_and_enhance_image, classify_land_types, get_nearest_subarea
+from image_processing import calculate_red_land_area_sqft, calculate_total_polygon_area_sqft, process_image, clean_and_enhance_image, classify_land_types, get_nearest_subarea
 
 app = Flask(__name__)
 
@@ -95,22 +95,45 @@ def save_coordinates():
 
 @app.route('/clean-images', methods=['POST'])
 def clean_images():
-    # Define the static folder path
+    # Paths to static and images folders
     static_folder = os.path.join(os.getcwd(), 'static')
-    # Define a whitelist of files that should not be deleted
-    whitelist = {'styles.css', 'image.png'}  # add any static assets you want to preserve
-    removed_files = []
+    images_folder = os.path.join(os.getcwd(), 'images')
 
-    for filename in os.listdir(static_folder):
-        # Delete only PNG images that are not whitelisted
-        if filename.endswith('.png') and filename not in whitelist:
-            file_path = os.path.join(static_folder, filename)
-            try:
-                os.remove(file_path)
-                removed_files.append(filename)
-            except Exception as e:
-                print(f"Error deleting file {filename}: {e}")
-    return jsonify({"message": "Static image data cleaned", "removed": removed_files})
+    # Whitelist for the static folder (e.g., do not delete styles.css, etc.)
+    static_whitelist = {'styles.css', 'image.png'}
+
+    removed_from_static = []
+    removed_from_images = []
+
+    # --- Clean the static folder ---
+    if os.path.exists(static_folder):
+        for filename in os.listdir(static_folder):
+            if filename.endswith('.png') and filename not in static_whitelist:
+                file_path = os.path.join(static_folder, filename)
+                try:
+                    os.remove(file_path)
+                    removed_from_static.append(filename)
+                except Exception as e:
+                    print(f"Error deleting file {filename} from static: {e}")
+
+    # --- Clean the images folder ---
+    if os.path.exists(images_folder):
+        for filename in os.listdir(images_folder):
+            # If you want to whitelist certain files in images, add a check here
+            if filename.endswith('.png'):
+                file_path = os.path.join(images_folder, filename)
+                try:
+                    os.remove(file_path)
+                    removed_from_images.append(filename)
+                except Exception as e:
+                    print(f"Error deleting file {filename} from images: {e}")
+
+    return jsonify({
+        "message": "All image data cleaned from static and images folders.",
+        "removed_static": removed_from_static,
+        "removed_images": removed_from_images
+    })
+
 @app.route('/get-land-data', methods=['POST'])
 def get_land_data():
     data = request.json.get("image")
@@ -147,7 +170,11 @@ def get_land_data():
     unique_filename = f"classified_land_image_{unique_id}.png"
     full_processed_path = os.path.join("static", unique_filename)
     shutil.copy(classified_image_path, full_processed_path)
+
+    polygon_area_sqft = calculate_total_polygon_area_sqft(classified_image_path)
     
+    # Compute red land area in square feet
+    red_land_area_sqft = calculate_red_land_area_sqft(classified_image_path)
     # Compute the land rate if last_marker info is provided
     land_rate = None
     if last_marker:
@@ -159,12 +186,40 @@ def get_land_data():
         if land_rate is not None:
             land_rate = int(land_rate)
     
+    land_value = 0
+    if land_rate and red_land_area_sqft:
+        land_value = land_rate * red_land_area_sqft
+    
     return jsonify({
         "message": "Image processed magnificently!",
         "processed_image_url": f"/static/{unique_filename}",
-        "land_rate": land_rate
+        "polygon_area_sqft": polygon_area_sqft,
+        "land_rate": land_rate,
+        "red_land_area_sqft": red_land_area_sqft,
+        "land_value": land_value
     })
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route('/remove-file', methods=['POST'])
+def remove_file():
+    data = request.get_json()
+    filename = data.get('filename')
+    if not filename:
+        return jsonify({"message": "No filename provided"}), 400
+    
+    # If your images are in "static", adjust as needed:
+    file_path = os.path.join("static", filename)
+    
+    # You may also want to check "images" directory if that's where you store them:
+    # file_path = os.path.join("images", filename)
+
+    try:
+        os.remove(file_path)
+        return jsonify({"message": f"File '{filename}' removed successfully."})
+    except FileNotFoundError:
+        return jsonify({"message": f"File '{filename}' not found."}), 404
+    except Exception as e:
+        return jsonify({"message": f"Error removing file: {str(e)}"}), 500
