@@ -1,230 +1,421 @@
-/* Import Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
+/* -----------------------------
+   1) Global & Body Styles
+------------------------------ */
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
-
-.gm-style .gm-style-iw-c {
-    pointer-events: none;
-}
-#output {
-    text-align: center; /* Center the image inside the div */
-    justify-content: center; /* Center the image horizontally */
-    align-items: center; /* Center the image vertically */
-    padding-left: 30%;
-}
-
-#classifiedImage {
-    display: none;
-    max-width: 90%; /* Slightly enlarge but keep it responsive */
-    max-height: 500px; /* Limit height to avoid excessive enlargement */
-    margin-top: 20px;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
-}
-
-
-/* Navbar Styling */
-.navbar {
-    background-color: #007bff;
-    padding: 15px 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Navbar Brand/Logo */
-.navbar-brand {
-    font-weight: bold;
-    color: white;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-
-.navbar-brand i {
-    margin-right: 10px;
-    font-size: 24px;
-}
-
-/* Navbar Links */
-.navbar-nav {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar-nav li {
-    display: inline;
-}
-
-.navbar-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background 0.3s ease-in-out;
-}
-
-.navbar-nav a:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* Sticky Effect */
-.navbar.scrolled {
-    background-color: #0056b3;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-    padding: 12px 20px;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        text-align: center;
-    }
-    .navbar-nav {
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-
-/* Centered Title */
-.jumbotron {
-    text-align: center;
-    padding: 30px;
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 800px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Google Map Styling */
-#googleMap {
-    width: 50vw;  /* Make width 50% of the viewport width */
-    height: 50vw; /* Match height to width for a square shape */
-    max-width: 600px;  /* Limit maximum size */
-    max-height: 600px; /* Ensure square shape on large screens */
-    min-width: 300px;  /* Ensure it's not too small */
-    min-height: 300px; /* Maintain square proportions */
-
-    background: #ddd;
-    margin: auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-
-/* Hover Effect on Map */
-#googleMap:hover {
-    transform: scale(1.02);
-    box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Sidebar for Controls */
-#sidebar {
-    width: 90%;
-    background: white;
-    padding: 40%;
-    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
-    margin: 20px;
-    transition: all 0.3s ease-in-out;
-}
-
-#sidebar h4 {
-    font-weight: 600;
-    color: #007bff;
-    margin-bottom: 15px;
-}
-
-/* Buttons Styling */
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #007bff;
-    border: none;
-    border-radius: 12px;
-    transition: all 0.3s ease-in-out;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Output Box */
-.output-box {
-    margin-top: 10px;
-    padding: 15px;
-    background: #e3f2fd;
-    border-radius: 12px;
-    font-weight: 500;
-    transition: background 0.3s ease-in-out;
-}
-
-.output-box:hover {
-    background: #d0ebff;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    #googleMap {
-        width: 100%;
-        height: 400px;
-    }
-
-    #sidebar {
-        width: 100%;
-        border-radius: 0;
-    }
-}
-
-/* Container for polygon thumbnails */
-#polygonContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-    justify-content: center;
-  }
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 60px;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background-size: cover;
+  color: #fff; /* Updated to white for better contrast */
   
-  /* Styling for each polygon thumbnail */
-  #polygonContainer .polygon-thumb {
-    width: 150px;
-    border: 1px solid #ddd;
+  /* Smooth font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Dark Overlay for better readability */
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Slight transparency for better readability */
+  z-index: -1;
+}
+
+  
+  /* -----------------------------
+     2) Custom Scrollbar
+  ------------------------------ */
+  ::-webkit-scrollbar {
+    width: 8px;       /* scrollbar width */
+  }
+  ::-webkit-scrollbar-track {
+    background: #f4f7f6;
     border-radius: 4px;
-    padding: 5px;
-    background: #fff;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+    border: 1px solid #fff;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #b3b3b3;
   }
   
-  /* Ensure the thumbnail images fill the container */
-  #polygonContainer .polygon-thumb img {
+  /* -----------------------------
+     3) Navigation Bar
+  ------------------------------ */
+  .navbar {
+    position: fixed; /* Makes it stay on top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 176, 6, 0.8); /* Adds slight transparency */
+    padding: 15px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+  
+  .navbar-brand {
+    color: #000000;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  .navbar-brand i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+  }
+  
+  /* -----------------------------
+     4) Main Container
+        - Sidebar (left)
+        - Main content (right)
+  ------------------------------ */
+  .container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px; /* spacing between sidebar and main-content */
+  }
+  
+  /* -----------------------------
+     4A) Sidebar Styles
+  ------------------------------ */
+  #sidebar {
+    width: 300px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Headings and text in the sidebar */
+  #sidebar h4 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  #sidebar p {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+  }
+  
+  /* Sidebar Buttons */
+  #sidebar .btn {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+  
+  #sidebar .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  
+  #sidebar #cleanImagesBtn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  }
+  
+  #sidebar #cleanImagesBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  
+  /* -----------------------------
+     4B) Main Content (right)
+        - Map on top
+        - Ranking below
+  ------------------------------ */
+  .main-content {
+    flex: 1;               /* fill the remaining space */
+    display: flex;
+    flex-direction: column;  /* vertical stacking: map on top, ranking below */
+    gap: 20px;
+  }
+  
+  /* Google Map Display */
+  #googleMap {
+    width: 100%;
+    height: 500px; /* adjust as needed */
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+  }
+  #googleMap:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  /* -----------------------------
+     5) Image Section in Sidebar
+  ------------------------------ */
+  .image-section {
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .image-section h5 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+  }
+  
+  /* Horizontal Scrollable Image Grid (Input Images) */
+  .image-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+  
+  /* Smooth transitions for images */
+  .image-grid img {
+    flex: 0 0 auto;
+    width: 150px;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+  .image-grid img:hover {
+    transform: scale(1.03);
+  }
+  
+  /* -----------------------------
+     6) Ranking Section
+  ------------------------------ */
+  .ranking-section {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .ranking-section h5 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+  }
+  
+  /* Ranking Grid for rank cards */
+  .ranking-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  /* Each rank card */
+  .rank-card {
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .rank-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  
+  .rank-card h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .rank-card p {
+    margin: 4px 0;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  
+  /* For images in rank-card (like input thumbnails) */
+  .rank-card img {
+    display: block;
+    margin: 0 auto 8px auto; /* center horizontally, 8px bottom margin */
+    width: 100%;
+    max-width: 200px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: transform 0.2s ease;
+  }
+  .rank-card img:hover {
+    transform: scale(1.03);
+  }
+  
+  /* -----------------------------
+     7) Analysis Output Grid
+  ------------------------------ */
+  /* 1) Horizontal scroll for INPUT images in polygonContainer */
+  #polygonContainer.image-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto; /* horizontal scrolling */
+    padding-bottom: 5px;
+  }
+  /* (Already covered by .image-grid img rules above) */
+  
+  /* 2) VERTICAL stack for ANALYZED images in analysisOutput */
+  #analysisOutput.image-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    max-height: 500px; /* limit height so it scrolls if needed */
+    padding-right: 5px; /* spacing for scroll bar */
+  }
+  
+  /* Each analysis card (or .result-container) fills the width */
+  #analysisOutput.image-grid .result-container {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  #analysisOutput.image-grid .result-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  
+  /* Example styling for text inside analyzed card */
+  #analysisOutput.image-grid .result-container h3,
+  #analysisOutput.image-grid .result-container h4 {
+    margin: 8px 0;
+    color: #34495e;
+    font-weight: 500;
+  }
+  #analysisOutput.image-grid .result-container img {
     width: 100%;
     height: auto;
-    display: block;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  /* -----------------------------
+     8) Search Section
+  ------------------------------ */
+/* Search Section Container */
+/* Centered Search Section */
+.search-section {
+    background-color: #fff;
+    max-width: 600px;       /* Limits the width to keep it neat */
+    margin: 50px auto;      /* Centers horizontally and adds vertical spacing */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: 'Poppins', sans-serif;
+    text-align: center;     /* Centers content within the container */
+  }
+  
+  /* Optional heading or title within the search section */
+  .search-section h5 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* Each row for label + input */
+  .search-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* or center, if desired */
+    margin-bottom: 15px;
+    gap: 5px;
+  }
+  
+  /* Label styling */
+  .search-row label {
+    font-size: 0.9rem;
+    color: #2c3e50;
+  }
+  
+  /* Input styling */
+  .search-row input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .search-row input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 4px rgba(52, 152, 219, 0.2);
+  }
+  
+  /* Responsive adjustments for small screens */
+  @media (max-width: 768px) {
+    .search-section {
+      margin: 20px auto;
+      width: 90%;
+    }
+  }
+  
+  
+  
+  /* -----------------------------
+     9) Responsive Design
+  ------------------------------ */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      gap: 0;
+    }
+    #sidebar {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .main-content {
+      width: 100%;
+    }
+    #googleMap {
+      height: 300px; /* smaller map for small screens */
+    }
   }
   
