@@ -603,3 +603,23 @@ async function loadCsvData() {
     console.error("Error loading CSV:", error);
   }
 }
+// Show modal on page load and prevent other interactions until closed
+window.onload = function () {
+  const modal = document.getElementById("instructionModal");
+  const btn = document.getElementById("closeModalBtn");
+
+  btn.addEventListener("click", function () {
+    modal.style.display = "none";
+    // Initialize rest of your app after modal is closed
+    initApp();
+  });
+};
+
+// Wrap original init logic here
+function initApp() {
+  loadCsvData().then(() => {
+    initMap();
+    populateSearchBox();
+    setupEventListeners();
+  });
+}
